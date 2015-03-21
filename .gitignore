@@ -55,3 +55,4 @@ target/
 
 # Editor specific files
 .*.sw[pon]
+.idea
