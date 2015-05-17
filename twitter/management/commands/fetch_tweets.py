@@ -1,5 +1,5 @@
 # coding: utf-8
-from __future__ import unicode_literals
+from __future__ import unicode_literals, print_function
 import os
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.gis.geos import Point, Polygon, fromstr, GEOSGeometry
@@ -47,19 +47,30 @@ class MyStreamListener(tweepy.StreamListener):
                 point=point,
                 place_name=status.place.name,
                 place_full_name=status.place.full_name,
+                tweet_id=status.id_str,
             )
-            print(b'GOT ONE\x07')
+            print('GOT ONE', status.text[:25])
         else:
-            print("doesn't contain bad word")
+            print("doesn't contain bad word", status.text[:25])
 
         return True
 
 
-consumer_token = 'F3re9ZTs0KfFajt0MM0x3rasb'
-consumer_secret = 'gqjSUpx3JYViPumEK5AEvQSpHpLiO0ovmQWdEO2BjjFRszyYK1'
+TWITTER_TOKENS = [
+    {
+        'consumer_token':       'F3re9ZTs0KfFajt0MM0x3rasb',
+        'consumer_secret':      'gqjSUpx3JYViPumEK5AEvQSpHpLiO0ovmQWdEO2BjjFRszyYK1',
+        'access_token':         '8173792-okNKPBAFE6oBxoCxbQRXYqYZHbK34eiGyooW7NbJhK',
+        'access_token_secret':  '8BcpampuzJSBmo1zstHc2iw9igvCcaenMl0fpdODy7TMt',
+    },
 
-access_token = '8173792-okNKPBAFE6oBxoCxbQRXYqYZHbK34eiGyooW7NbJhK'
-access_token_secret = '8BcpampuzJSBmo1zstHc2iw9igvCcaenMl0fpdODy7TMt'
+    # {
+    #     'consumer_token':       'oBraYlYOUvcM2RyGpD56tCPxA',
+    #     'consumer_secret':      'qz6DKIdZvd9uTEd94cpqVuByIzdfG53ECXLxjWPEu7R8xsCh0i',
+    #     'access_token':         '2361044455-vxOOTgzl0UH13gHD96QrYiDwTPI1ACF8rL038ha',
+    #     'access_token_secret':  'HMYp4t3dEmL4Vyjwm0FKy5tqVGfgGvrnHVvATIG1w0poO',
+    # },
+]
 
 
 homofobik = [
@@ -117,11 +128,15 @@ hakaret = [
 KELIMELER = homofobik + irkci + hakaret
 
 
+def listen_streaming_api(cred):
+    auth = tweepy.OAuthHandler(cred['consumer_token'], cred['consumer_secret'])
+    auth.set_access_token(cred['access_token'], cred['access_token_secret'])
+    listener = MyStreamListener()
+    myStream = tweepy.Stream(auth=auth, listener=listener)
+    myStream.filter(locations=[26.04,35.87,44.99,42.45])
+
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        auth = tweepy.OAuthHandler(consumer_token, consumer_secret)
-        auth.set_access_token(access_token, access_token_secret)
-        myStreamListener = MyStreamListener()
-        myStream = tweepy.Stream(auth=auth, listener=MyStreamListener())
-        myStream.filter(locations=[26.04,35.87,44.99,42.45])
-        # myStream.filter(track=homofobik + irkci + hakaret)
+        for item in TWITTER_TOKENS:
+            listen_streaming_api(item)
