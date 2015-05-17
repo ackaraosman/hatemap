@@ -1,6 +1,10 @@
 $(function() {
   var googleMap;
-  var oldLayer;
+  var heatmap = new google.maps.visualization.HeatmapLayer({
+    data: [],
+    radius: 20,
+    maxIntensity: 10
+  });
 
   function renderMap() {
     var turkey = new google.maps.LatLng(38.611, 34.831);
@@ -8,29 +12,27 @@ $(function() {
     googleMap = new google.maps.Map($('#map-canvas')[0], {
       center: turkey,
       zoom: 6,
-      mapTypeId: google.maps.MapTypeId.SATELLITE
+      mapTypeId: google.maps.MapTypeId.SATELLITE,
     });
+
+    heatmap.setMap(googleMap);
   }
 
-  renderMap();
-
-  setInterval(function() {
+  function fetchData() {
     $.get('/points.json', function(data) {
       var heatmapData = data.results.map(function(item) {
         return new google.maps.LatLng(item[1], item[0]);
       });
-      renderHeatmap(heatmapData);
+      heatmap.setData(heatmapData);
     });
-  }, 5000);
+  }
+
+  renderMap();
+  fetchData();
+
+  setInterval(fetchData, 3000);
 
   function renderHeatmap(heatmapData) {
-    var heatmap = new google.maps.visualization.HeatmapLayer({
-      data: heatmapData
-    });
-    if (oldLayer) {
-      oldLayer.setMap(null);
-    }
-    heatmap.setMap(googleMap);
     oldLayer = heatmap;
   }
 });
