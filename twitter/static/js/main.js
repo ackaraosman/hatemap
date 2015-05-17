@@ -13,7 +13,8 @@ $(function() {
     new google.maps.LatLng(39.906, 32.747),
     new google.maps.LatLng(39.906, 32.745),
     new google.maps.LatLng(39.906, 32.743),
-    new google.maps.LatLng(39.906, 32.741)
+    new google.maps.LatLng(39.906, 32.741),
+    new google.maps.LatLng(37.906, 32.741)
   ];
 
   var sanFrancisco = new google.maps.LatLng(38.611, 34.831);
