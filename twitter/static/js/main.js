@@ -31,8 +31,4 @@ $(function() {
   fetchData();
 
   setInterval(fetchData, 3000);
-
-  function renderHeatmap(heatmapData) {
-    oldLayer = heatmap;
-  }
 });
