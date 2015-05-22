@@ -11,7 +11,7 @@ def home(request):
 @gzip_page
 @json_view
 def points(request):
-    tweets = Tweet.objects.all()
+    tweets = Tweet.objects.all().order_by('-id')[:5000]
     points = [[p[0].x, p[0].y] for p in tweets.values_list('point')]
     return {
         'results': points
