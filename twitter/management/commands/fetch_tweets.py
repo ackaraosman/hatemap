@@ -19,6 +19,9 @@ def contains_bad_word(text):
     for kelime in KELIMELER:
         if kelime in words:
             return True
+        if len(kelime.split()) > 1:
+            if kelime in text:
+                return True
     return False
 
 
@@ -95,6 +98,8 @@ irkci = [
     'hain arap',
     'gürcü domuzu',
     'terörist müslüman',
+    'kürt',
+    'ermeni'
 ]
 
 hakaret = [
