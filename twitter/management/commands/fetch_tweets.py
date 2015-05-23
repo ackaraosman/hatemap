@@ -26,9 +26,6 @@ class MyStreamListener(tweepy.StreamListener):
         save_tweet = False
         point = None
 
-        if status.user.screen_name in ['hege_monya', 'hegemonya']:
-            import ipdb; ipdb.set_trace()
-
         if hasattr(status, 'coordinates') and status.coordinates:
             coordinates = status.coordinates['coordinates']
             point = fromstr('POINT(%s %s)' % tuple(coordinates))
