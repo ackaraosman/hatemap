@@ -4,8 +4,10 @@ geopy==1.10.0
 gnureadline==6.3.3
 ipdb==0.8
 ipython==3.0.0
+nltk==3.0.2
 oauthlib==0.7.2
 psycopg2==2.6
+pytz==2015.4
 requests==2.6.0
 requests-oauthlib==0.4.2
 six==1.9.0
