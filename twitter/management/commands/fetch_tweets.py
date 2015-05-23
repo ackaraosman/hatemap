@@ -1,6 +1,8 @@
 # coding: utf-8
 from __future__ import unicode_literals, print_function
+from datetime import datetime
 import os
+import pytz
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.gis.geos import Point, Polygon, fromstr, GEOSGeometry
 from twitter.models import Tweet
@@ -38,6 +40,8 @@ class MyStreamListener(tweepy.StreamListener):
                 save_tweet = True
 
         if save_tweet:
+            timestamp = int(status.timestamp_ms) / 1000.0
+            created_at = datetime.fromtimestamp(timestamp, tz=pytz.utc)
             tweet = Tweet.objects.create(
                 username=status.user.screen_name,
                 body=status.text,
@@ -45,6 +49,7 @@ class MyStreamListener(tweepy.StreamListener):
                 place_name=status.place.name,
                 place_full_name=status.place.full_name,
                 tweet_id=status.id_str,
+                created_at=created_at,
             )
             print('GOT ONE', status.text[:25])
         else:
