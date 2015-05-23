@@ -1,7 +1,13 @@
+# coding: utf-8
 from django.contrib.gis.db import models
 
 
 class Tweet(models.Model):
+    CLASSES = [
+        ('A', 'Abartma'),
+        ('H', 'Homofobi'),
+        ('I', 'Irkçılık'),
+    ]
     username = models.CharField(max_length=20)
     body = models.TextField()
     point = models.PointField(null=True, blank=True)
@@ -11,6 +17,8 @@ class Tweet(models.Model):
     objects = models.GeoManager()
     created_at = models.DateTimeField(null=True, blank=True)
     train = models.BooleanField(default=False)
+    klass = models.CharField(max_length=2, choices=CLASSES, null=True, blank=True)
+
 
     def __unicode__(self):
         return self.username + ': ' + self.body
