@@ -10,6 +10,7 @@ class Tweet(models.Model):
     tweet_id = models.CharField(max_length=25, unique=True)
     objects = models.GeoManager()
     created_at = models.DateTimeField(null=True, blank=True)
+    train = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.username + ': ' + self.body

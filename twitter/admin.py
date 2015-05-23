@@ -4,4 +4,4 @@ from .models import Tweet
 
 @admin.register(Tweet)
 class TweetAdmin(admin.ModelAdmin):
-    list_display = ['place_name', 'point', 'username', 'body']
+    list_display = ['place_name', 'created_at', 'username', 'train', 'body']
