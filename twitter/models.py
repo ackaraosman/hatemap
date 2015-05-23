@@ -4,7 +4,7 @@ from django.contrib.gis.db import models
 
 class Tweet(models.Model):
     CLASSES = [
-        ('A', 'Abartma'),
+        ('A', 'Hakaret'),
         ('H', 'Homofobi'),
         ('I', 'Irkçılık'),
     ]

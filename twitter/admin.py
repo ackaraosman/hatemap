@@ -13,9 +13,9 @@ def mark_as_not_train(modeladmin, request, queryset):
 mark_as_not_train.short_description = 'Remove from train data'
 
 
-def mark_as_abartma(modeladmin, request, queryset):
+def mark_as_hakaret(modeladmin, request, queryset):
     queryset.update(klass='A')
-mark_as_abartma.short_description = 'Mark as Abartma'
+mark_as_hakaret.short_description = 'Mark as Hakaret'
 
 
 def mark_as_irkcilik(modeladmin, request, queryset):
@@ -34,7 +34,7 @@ class TweetAdmin(admin.ModelAdmin):
     actions = [
         mark_as_train,
         mark_as_not_train,
-        mark_as_abartma,
+        mark_as_hakaret,
         mark_as_irkcilik,
         mark_as_homofobi,
     ]
