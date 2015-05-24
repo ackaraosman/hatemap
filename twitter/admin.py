@@ -31,6 +31,7 @@ mark_as_homofobi.short_description = 'Mark as Homofobi'
 @admin.register(Tweet)
 class TweetAdmin(admin.ModelAdmin):
     list_display = ['place_name', 'created_at', 'username', 'train', 'klass', 'body']
+    list_filter = ['train', 'klass']
     actions = [
         mark_as_train,
         mark_as_not_train,
