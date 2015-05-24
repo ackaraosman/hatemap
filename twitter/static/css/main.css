@@ -27,9 +27,15 @@ body {
     bottom: 20px;
     width: 110px;
     height: 81px;
-    background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 10;
+    -webkit-box-shadow: 0px 0px 8px 1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 8px 1px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 8px 1px rgba(0,0,0,0.75);
+}
+
+#classifications-layer a.active {
+    background-color: rgba(0, 0, 0, 0.51);
 }
 
 #classifications-layer a {
@@ -42,5 +48,5 @@ body {
 }
 
 #classifications-layer a:hover {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
 }

@@ -3,6 +3,7 @@ $(function() {
   var googleMap;
   var xhr;
   var klass = window.location.hash.substring(1) || 'hakaret';
+  setActive(klass);
 
   var initialPointsData = {};
   var setTopicData = function(topic, data) {
@@ -49,9 +50,15 @@ $(function() {
   window.addEventListener("hashchange", function(e) {
     klass = window.location.hash.substring(1);
     xhr.abort();
+    setActive(klass);
     heatmap.setData(mapLatLng(initialPointsData[klass]));
     fetchData();
   }, false);
+
+  function setActive(topic) {
+    $('#classifications-layer a.active').removeClass('active');
+    $('a[href="#' + topic + '"]').addClass('active');
+  }
 
   renderMap();
   fetchData();
