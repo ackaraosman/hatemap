@@ -5,8 +5,9 @@ import os
 import pytz
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.gis.geos import Point, Polygon, fromstr, GEOSGeometry
-from twitter.models import Tweet
 import tweepy
+from unidecode import unidecode
+from twitter.models import Tweet
 
 
 turkey_geojson = open(os.path.join(os.path.dirname(__file__), 'turkey.geojson')).read()
@@ -14,8 +15,7 @@ turkey = GEOSGeometry(turkey_geojson)
 
 
 def contains_bad_word(text):
-    # kelime gruplarinda sicti: got lalesi
-    words = text.lower().split()
+    words = unidecode(text.lower()).split()
     for kelime in KELIMELER:
         if kelime in words:
             return True

@@ -7,8 +7,8 @@ import re
 import nltk
 import time
 from django.core.management.base import BaseCommand, CommandError
+from unidecode import unidecode
 from twitter.models import Tweet
-from pprint import pprint
 
 
 STOPWORDS_PATH = os.path.join(os.path.dirname(__file__), 'stopwords.txt')
@@ -22,7 +22,7 @@ NUMBER_PATTERN = re.compile(r'\b[\d,.]+\b', re.UNICODE)
 
 def process_tweet(tweet):
     # convert to lower case
-    tweet = tweet.lower()
+    tweet = unidecode(tweet.lower())
     # convert www.* or https?://* to URL
     tweet = re.sub(URL_PATTERN, 'URL', tweet)
     # convert @username to AT_USER
