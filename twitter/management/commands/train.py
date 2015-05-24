@@ -16,6 +16,7 @@ USERNAME_PATTERN = re.compile(r'@[^\s]+', re.UNICODE)
 WHITESPACE_PATTERN = re.compile(r'[\s]+', re.UNICODE)
 HASHTAG_PATTERN = re.compile(r'#([^\s]+)', re.UNICODE)
 WORD_PATTERN = re.compile(r'^\w[\w\d_]*$', re.UNICODE)
+NUMBER_PATTERN = re.compile(r'\b\d+\b', re.UNICODE)
 
 
 def process_tweet(tweet):
@@ -29,6 +30,8 @@ def process_tweet(tweet):
     tweet = re.sub(WHITESPACE_PATTERN, ' ', tweet)
     # replace #word with word
     tweet = re.sub(HASHTAG_PATTERN, r'\1', tweet)
+    # remove numbers
+    tweet = re.sub(NUMBER_PATTERN, '', tweet)
     tweet = tweet.strip('\'"')
     return tweet
 
