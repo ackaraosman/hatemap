@@ -28,6 +28,11 @@ def mark_as_homofobi(modeladmin, request, queryset):
 mark_as_homofobi.short_description = 'Mark as Homofobi'
 
 
+def unmark_classification(modeladmin, request, queryset):
+    queryset.update(klass=None)
+unmark_classification.short_description = 'Unmark Classification'
+
+
 @admin.register(Tweet)
 class TweetAdmin(admin.ModelAdmin):
     list_display = ['place_name', 'created_at', 'username', 'train', 'klass', 'body']
@@ -38,4 +43,5 @@ class TweetAdmin(admin.ModelAdmin):
         mark_as_hakaret,
         mark_as_irkcilik,
         mark_as_homofobi,
+        unmark_classification,
     ]
