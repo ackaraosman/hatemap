@@ -16,7 +16,7 @@ USERNAME_PATTERN = re.compile(r'@[^\s]+', re.UNICODE)
 WHITESPACE_PATTERN = re.compile(r'[\s]+', re.UNICODE)
 HASHTAG_PATTERN = re.compile(r'#([^\s]+)', re.UNICODE)
 WORD_PATTERN = re.compile(r'^\w[\w\d_]*$', re.UNICODE)
-NUMBER_PATTERN = re.compile(r'\b\d+\b', re.UNICODE)
+NUMBER_PATTERN = re.compile(r'\b[\d,.]+\b', re.UNICODE)
 
 
 def process_tweet(tweet):
