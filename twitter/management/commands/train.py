@@ -4,6 +4,7 @@ import codecs
 import os
 import re
 import nltk
+import time
 from django.core.management.base import BaseCommand, CommandError
 from twitter.models import Tweet
 from pprint import pprint
@@ -74,9 +75,12 @@ class Command(BaseCommand):
         training_set = nltk.classify.util.apply_features(extract_features, tweets)
         nb_classifier = nltk.NaiveBayesClassifier.train(training_set)
 
-        unclassified_tweets = Tweet.objects.filter(train=False, klass=None)
-        for tweet in unclassified_tweets:
-            feature_vect = get_feature_vector(process_tweet(tweet.body))
-            sentiment = nb_classifier.classify(extract_features(feature_vect))
-            if sentiment != 'Hakaret':
-                print(tweet.id, sentiment, tweet.body)
+        while True:
+            unclassified_tweets = Tweet.objects.filter(train=False, klass=None)
+            for tweet in unclassified_tweets:
+                feature_vect = get_feature_vector(process_tweet(tweet.body))
+                sentiment = nb_classifier.classify(extract_features(feature_vect))
+                if sentiment != 'Hakaret':
+                    print(tweet.id, sentiment, tweet.body)
+            print('Waiting...')
+            time.sleep(3)
