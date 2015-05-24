@@ -1,6 +1,6 @@
 $(function() {
   var googleMap;
-  var klass = 'irkcilik';
+  var klass = window.location.hash.substring(1) || 'hakaret';
 
   var heatmap = new google.maps.visualization.HeatmapLayer({
     data: [],
