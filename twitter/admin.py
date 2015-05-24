@@ -1,5 +1,5 @@
 # coding: utf-8
-from django.contrib import admin
+from django.contrib.gis import admin
 from .models import Tweet
 
 
@@ -33,8 +33,7 @@ def unmark_classification(modeladmin, request, queryset):
 unmark_classification.short_description = 'Unmark Classification'
 
 
-@admin.register(Tweet)
-class TweetAdmin(admin.ModelAdmin):
+class TweetAdmin(admin.OSMGeoAdmin):
     list_display = ['place_name', 'created_at', 'username', 'train', 'klass', 'body']
     list_filter = ['train', 'klass']
     actions = [
@@ -45,3 +44,6 @@ class TweetAdmin(admin.ModelAdmin):
         mark_as_homofobi,
         unmark_classification,
     ]
+
+
+admin.site.register(Tweet, TweetAdmin)
