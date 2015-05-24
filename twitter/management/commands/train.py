@@ -1,6 +1,7 @@
 # coding: utf-8
 from __future__ import unicode_literals, print_function
 import codecs
+from collections import defaultdict
 import os
 import re
 import nltk
@@ -77,14 +78,19 @@ class Command(BaseCommand):
 
         training_set = nltk.classify.util.apply_features(extract_features, tweets)
         nb_classifier = nltk.NaiveBayesClassifier.train(training_set)
-        import ipdb; ipdb.set_trace()
+
         while True:
             unclassified_tweets = Tweet.objects.filter(train=False, klass=None)
-            print('Processing %d tweets...' % unclassified_tweets.count())
+            total_count = unclassified_tweets.count()
+            print('Processing %d tweets...' % total_count)
+            counts = defaultdict(int)
             for tweet in unclassified_tweets:
                 feature_vect = get_feature_vector(process_tweet(tweet.body))
                 sentiment = nb_classifier.classify(extract_features(feature_vect))
+                counts[sentiment] += 1
                 tweet.klass = sentiment
                 tweet.save()
+            print('Processing finished. ', end='')
+            print(', '.join(['%d %s' % (counts[k], v) for k, v in Tweet.CLASSES]))
             print('Waiting...')
             time.sleep(3)
