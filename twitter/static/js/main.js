@@ -1,6 +1,18 @@
 $(function() {
+  var baseUrl = '/points.json?k=';
   var googleMap;
+  var xhr;
   var klass = window.location.hash.substring(1) || 'hakaret';
+
+  var initialPointsData = {};
+  var setTopicData = function(topic, data) {
+    initialPointsData[topic] = data.results;
+  };
+
+  var topics = ['hakaret', 'irkcilik', 'homofobi'];
+  for (var i = 0; i < topics.length; i++) {
+    $.get(baseUrl + topics[i], setTopicData.bind(this, topics[i]));
+  }
 
   var heatmap = new google.maps.visualization.HeatmapLayer({
     data: [],
@@ -20,18 +32,24 @@ $(function() {
     heatmap.setMap(googleMap);
   }
 
+  function mapLatLng(items) {
+    return items.map(function(item) {
+      return new google.maps.LatLng(item[1], item[0]);
+    });
+  }
+
   function fetchData() {
-    var url = '/points.json?k=' + klass;
-    $.get(url, function(data) {
-      var heatmapData = data.results.map(function(item) {
-        return new google.maps.LatLng(item[1], item[0]);
-      });
-      heatmap.setData(heatmapData);
+    var url = baseUrl + klass;
+    xhr = $.get(url, function(data) {
+      setTopicData(klass, data);
+      heatmap.setData(mapLatLng(data.results));
     });
   }
 
   window.addEventListener("hashchange", function(e) {
     klass = window.location.hash.substring(1);
+    xhr.abort();
+    heatmap.setData(mapLatLng(initialPointsData[klass]));
     fetchData();
   }, false);
 
