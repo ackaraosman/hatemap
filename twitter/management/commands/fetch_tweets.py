@@ -81,56 +81,61 @@ TWITTER_TOKENS = [
 
 homofobik = [
     'lezbiyen',
-    'nonoş',
-    'homoseksüel',
+    'nonos',
+    'homoseksuel',
     'ipne',
     'ibne',
-    'oğlancı',
+    'oglanci',
+    'got oglani'
+    'gotcu'
+    'kulampara'
 ]
 
 irkci = [
-    'ermeni köpeği',
-    'ermeni dölü',
+    'ermeni köpegği',
+    'ermeni dolu',
     'rum tohumu',
-    'pis kürt',
-    'sahtekar çerkez',
-    'sahtekar çerkes',
-    'alçak azeri',
+    'pis kurt',
+    'sahtekar cerkez',
+    'sahtekar cerkes',
+    'alcak azeri',
     'hain arap',
-    'gürcü domuzu',
-    'terörist müslüman',
-    'kürt',
+    'gurcu domuzu',
+    'terorist musluman',
+    'kurt',
     'ermeni',
-    'döl',
+    'dol',
 ]
 
 hakaret = [
     'pezevenk',
     'pezeveng',
     'gavat',
-    'godoş',
-    'dürzü',
-    'at kafası',
-    'göt lalesi',
-    'yavşak',
+    'godos',
+    'durzu',
+    'at kafasi',
+    'got lalesi',
     'yavsak',
-    'piç',
-    'göt',
+    'yavsak',
+    'pic',
+    'got',
     'orospu',
-    'götveren',
-    'göt veren',
-    'amcık',
-    'amın oğlu',
+    'gotveren',
+    'got veren',
+    'amcik',
+    'amın oglu',
     'sik',
     'siktir',
-    'puşt',
+    'pust',
     'yarrak',
     'yarrrak',
     'yarram',
     'yarrram',
     'amk',
-    'amına',
+    'amina',
     'denyo',
+    'subyanci'
+    'kavat'
 ]
 
 
