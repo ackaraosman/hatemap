@@ -67,7 +67,7 @@ class Command(BaseCommand):
 
         trains = Tweet.objects.filter(train=True).exclude(klass__isnull=True)
         for train in trains:
-            sentiment = train.get_klass_display()
+            sentiment = train.klass
             feature_vect = get_feature_vector(process_tweet(train.body))
             tweets.append((feature_vect, sentiment))
             FEATURE_LIST.update(feature_vect)
@@ -77,10 +77,11 @@ class Command(BaseCommand):
 
         while True:
             unclassified_tweets = Tweet.objects.filter(train=False, klass=None)
+            print('Processing %d tweets...' % unclassified_tweets.count())
             for tweet in unclassified_tweets:
                 feature_vect = get_feature_vector(process_tweet(tweet.body))
                 sentiment = nb_classifier.classify(extract_features(feature_vect))
-                if sentiment != 'Hakaret':
-                    print(tweet.id, sentiment, tweet.body)
+                tweet.klass = sentiment
+                tweet.save()
             print('Waiting...')
             time.sleep(3)
