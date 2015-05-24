@@ -92,7 +92,7 @@ homofobik = [
 ]
 
 irkci = [
-    'ermeni köpegği',
+    'ermeni köpegi',
     'ermeni dolu',
     'rum tohumu',
     'pis kurt',
