@@ -79,4 +79,4 @@ class Command(BaseCommand):
             feature_vect = get_feature_vector(process_tweet(tweet.body))
             sentiment = nb_classifier.classify(extract_features(feature_vect))
             if sentiment != 'Hakaret':
-                print(tweet.id, tweet.body)
+                print(tweet.id, sentiment, tweet.body)
