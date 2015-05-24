@@ -39,6 +39,7 @@ class MyStreamListener(tweepy.StreamListener):
                     save_tweet = True
         else:
             if contains_bad_word(status.text):
+                # FIXME: origin is the wrong coordinate
                 point = fromstr('POINT(%s %s)' % status.place.bounding_box.origin())
                 save_tweet = True
 
@@ -99,7 +100,8 @@ irkci = [
     'gürcü domuzu',
     'terörist müslüman',
     'kürt',
-    'ermeni'
+    'ermeni',
+    'döl',
 ]
 
 hakaret = [

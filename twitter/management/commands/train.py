@@ -77,4 +77,6 @@ class Command(BaseCommand):
         unclassified_tweets = Tweet.objects.filter(train=False, klass=None)
         for tweet in unclassified_tweets:
             feature_vect = get_feature_vector(process_tweet(tweet.body))
-            print(nb_classifier.classify(extract_features(feature_vect)), tweet.body, '\n\n')
+            sentiment = nb_classifier.classify(extract_features(feature_vect))
+            if sentiment != 'Hakaret':
+                print(tweet.id, tweet.body)
