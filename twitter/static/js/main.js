@@ -1,5 +1,7 @@
 $(function() {
   var googleMap;
+  var klass = 'irkcilik';
+
   var heatmap = new google.maps.visualization.HeatmapLayer({
     data: [],
     radius: 20,
@@ -19,13 +21,19 @@ $(function() {
   }
 
   function fetchData() {
-    $.get('/points.json', function(data) {
+    var url = '/points.json?k=' + klass;
+    $.get(url, function(data) {
       var heatmapData = data.results.map(function(item) {
         return new google.maps.LatLng(item[1], item[0]);
       });
       heatmap.setData(heatmapData);
     });
   }
+
+  window.addEventListener("hashchange", function(e) {
+    klass = window.location.hash.substring(1);
+    fetchData();
+  }, false);
 
   renderMap();
   fetchData();
