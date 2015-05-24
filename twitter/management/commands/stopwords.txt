@@ -223,3 +223,7 @@ yoksa
 z
 zaten
 zira
+lan
+ulan
+ilk
+bi
