@@ -82,15 +82,17 @@ class Command(BaseCommand):
         while True:
             unclassified_tweets = Tweet.objects.filter(train=False, klass=None)
             total_count = unclassified_tweets.count()
-            print('Processing %d tweets...' % total_count)
-            counts = defaultdict(int)
-            for tweet in unclassified_tweets:
-                feature_vect = get_feature_vector(process_tweet(tweet.body))
-                sentiment = nb_classifier.classify(extract_features(feature_vect))
-                counts[sentiment] += 1
-                tweet.klass = sentiment
-                tweet.save()
-            print('Processing finished. ', end='')
-            print(', '.join(['%d %s' % (counts[k], v) for k, v in Tweet.CLASSES]))
+            if total_count > 0:
+                print('Processing %d tweets...' % total_count)
+                counts = defaultdict(int)
+                for tweet in unclassified_tweets:
+                    feature_vect = get_feature_vector(process_tweet(tweet.body))
+                    sentiment = nb_classifier.classify(extract_features(feature_vect))
+                    counts[sentiment] += 1
+                    tweet.klass = sentiment
+                    msg = ', '.join(['%d %s' % (counts[k], v) for k, v in Tweet.CLASSES])
+                    print(msg, end='\r')
+                    tweet.save()
+                print('Processing finished. ', end='')
             print('Waiting...')
             time.sleep(3)
