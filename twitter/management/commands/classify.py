@@ -70,6 +70,9 @@ class Command(BaseCommand):
         tweets = []
 
         trains = Tweet.objects.filter(train=True).exclude(klass__isnull=True)
+        if not trains:
+            raise CommandError('No train data, please add some from the admin page!')
+
         for train in trains:
             sentiment = train.klass
             feature_vect = get_feature_vector(process_tweet(train.body))
