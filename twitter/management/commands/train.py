@@ -80,7 +80,7 @@ class Command(BaseCommand):
         nb_classifier = nltk.NaiveBayesClassifier.train(training_set)
 
         while True:
-            unclassified_tweets = Tweet.objects.filter(train=False, klass=None).exclude(body__icontains='amk')
+            unclassified_tweets = Tweet.objects.filter(train=False, klass=None)
             total_count = unclassified_tweets.count()
             if total_count > 0:
                 print('Processing %d tweets...' % total_count)
@@ -90,8 +90,8 @@ class Command(BaseCommand):
                     sentiment = nb_classifier.classify(extract_features(feature_vect))
                     counts[sentiment] += 1
                     tweet.klass = sentiment
-                    msg = ', '.join(['%d %s' % (counts[k], v) for k, v in Tweet.CLASSES])
-                    print('\r' + msg, end='')
+                    msg = ['%d %s' % (counts[k], v) for k, v in Tweet.CLASSES]
+                    print('\r' + ', '.join(msg), end='')
                     tweet.save()
                 print('\nProcessing finished. ')
             print('Waiting...')
