@@ -85,6 +85,7 @@ class Command(BaseCommand):
             if total_count > 0:
                 print('Processing %d tweets...' % total_count)
                 counts = defaultdict(int)
+                start_time = time.time()
                 for tweet in unclassified_tweets:
                     feature_vect = get_feature_vector(process_tweet(tweet.body))
                     sentiment = nb_classifier.classify(extract_features(feature_vect))
@@ -93,6 +94,7 @@ class Command(BaseCommand):
                     msg = ['%d %s' % (counts[k], v) for k, v in Tweet.CLASSES]
                     print('\r' + ', '.join(msg), end='')
                     tweet.save()
-                print('\nProcessing finished. ')
+                end_time = time.time()
+                print('\nProcessing finished in %d seconds.' % int(end_time - start_time))
             print('Waiting...')
             time.sleep(3)
