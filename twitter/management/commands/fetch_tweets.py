@@ -8,6 +8,7 @@ from django.contrib.gis.geos import Point, Polygon, fromstr, GEOSGeometry
 import tweepy
 from unidecode import unidecode
 from twitter.models import Tweet
+from .badwords import BADWORDS, BADWORDS_NOASCIIFY
 
 
 turkey_geojson = open(os.path.join(os.path.dirname(__file__), 'turkey.geojson')).read()
@@ -28,9 +29,9 @@ def check_for_badwords(text, badwords):
 def contains_bad_word(text):
     text = text.lower()
     ascifiedtext = unidecode(text)
-    if check_for_badwords(ascifiedtext, KELIMELER):
+    if check_for_badwords(ascifiedtext, BADWORDS):
         return True
-    return check_for_badwords(text, NOASCIIFY)
+    return check_for_badwords(text, BADWORDS_NOASCIIFY)
 
 
 class MyStreamListener(tweepy.StreamListener):
@@ -85,72 +86,6 @@ TWITTER_TOKENS = [
     #     'access_token_secret':  'HMYp4t3dEmL4Vyjwm0FKy5tqVGfgGvrnHVvATIG1w0poO',
     # },
 ]
-
-
-NOASCIIFY = [
-    'kürt',
-    'döl',
-    'sik',
-    'siktir',
-    'göt',
-]
-
-homofobik = [
-    'lezbiyen',
-    'nonos',
-    'homoseksuel',
-    'ipne',
-    'ibne',
-    'oglanci',
-    'got oglani',
-    'gotcu',
-    'kulampara',
-]
-
-irkci = [
-    'ermeni köpegi',
-    'ermeni dolu',
-    'rum tohumu',
-    'pis kurt',
-    'sahtekar cerkez',
-    'sahtekar cerkes',
-    'alcak azeri',
-    'hain arap',
-    'gurcu domuzu',
-    'terorist musluman',
-    'ermeni',
-]
-
-hakaret = [
-    'pezevenk',
-    'pezeveng',
-    'gavat',
-    'godos',
-    'durzu',
-    'at kafasi',
-    'got lalesi',
-    'yavsak',
-    'yavsak',
-    'pic',
-    'orospu',
-    'gotveren',
-    'got veren',
-    'amcik',
-    'amin oglu',
-    'pust',
-    'yarrak',
-    'yarrrak',
-    'yarram',
-    'yarrram',
-    'amk',
-    'amina',
-    'denyo',
-    'subyanci',
-    'kavat',
-]
-
-
-KELIMELER = homofobik + irkci + hakaret
 
 
 def listen_streaming_api(cred):
