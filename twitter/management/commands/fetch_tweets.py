@@ -8,7 +8,7 @@ from django.contrib.gis.geos import Point, Polygon, fromstr, GEOSGeometry
 import tweepy
 from unidecode import unidecode
 from twitter.models import Tweet
-from .badwords import BADWORDS, BADWORDS_NOASCIIFY
+from ._badwords import BADWORDS, BADWORDS_NOASCIIFY
 
 
 turkey_geojson = open(os.path.join(os.path.dirname(__file__), 'turkey.geojson')).read()
