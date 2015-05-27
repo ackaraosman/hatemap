@@ -6,6 +6,8 @@ import os
 import re
 import nltk
 import time
+from django import db
+from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from unidecode import unidecode
 from twitter.models import Tweet
@@ -127,6 +129,8 @@ class Command(BaseCommand):
                     msg = ['%d %s' % (counts[k], v) for k, v in Tweet.CLASSES]
                     print('\r' + ', '.join(msg), end='')
                     tweet.save()
+                    if settings.DEBUG:
+                        db.reset_queries()
                 end_time = time.time()
                 print('\nProcessing finished in %d seconds.' % int(end_time - start_time))
             print('Waiting...')
