@@ -48,9 +48,12 @@ class MyStreamListener(tweepy.StreamListener):
                     save_tweet = True
         else:
             if contains_bad_word(status.text):
-                # FIXME: origin is the wrong coordinate
-                point = fromstr('POINT(%s %s)' % status.place.bounding_box.origin())
-                save_tweet = True
+                coordinates = status.place.bounding_box.origin()
+                # HACK: if its origin is Turkey, then dont save it
+                if coordinates != (25.668509, 35.8084193):
+                    # FIXME: origin is the wrong coordinate
+                    point = fromstr('POINT(%s %s)' % coordinates)
+                    save_tweet = True
 
         if save_tweet:
             timestamp = int(status.timestamp_ms) / 1000.0
