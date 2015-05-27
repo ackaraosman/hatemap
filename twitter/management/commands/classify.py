@@ -118,7 +118,7 @@ class Command(BaseCommand):
             unclassified_tweets = Tweet.objects.filter(train=False, klass=None)
             total_count = unclassified_tweets.count()
             if total_count > 0:
-                print('Processing %d tweets...' % total_count)
+                print('Classifying %d tweets...' % total_count)
                 counts = defaultdict(int)
                 start_time = time.time()
                 for tweet in unclassified_tweets:
@@ -131,7 +131,7 @@ class Command(BaseCommand):
                     tweet.save()
                     if settings.DEBUG:
                         db.reset_queries()
-                end_time = time.time()
-                print('\nProcessing finished in %d seconds.' % int(end_time - start_time))
+                elapsed = int(time.time() - start_time)
+                print('\nClassifying finished in %d seconds.' % elapsed)
             print('Waiting...')
             time.sleep(3)
