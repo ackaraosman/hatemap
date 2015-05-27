@@ -14,15 +14,23 @@ turkey_geojson = open(os.path.join(os.path.dirname(__file__), 'turkey.geojson'))
 turkey = GEOSGeometry(turkey_geojson)
 
 
-def contains_bad_word(text):
-    words = unidecode(text.lower()).split()
-    for kelime in KELIMELER:
-        if kelime in words:
+def check_for_badwords(text, badwords):
+    words = text.split()
+    for badword in badwords:
+        if any(word.startswith(badword) for word in words):
             return True
-        if len(kelime.split()) > 1:
-            if kelime in text:
+        if len(badword.split()) > 1:
+            if badword in text:
                 return True
     return False
+
+
+def contains_bad_word(text):
+    text = text.lower()
+    ascifiedtext = unidecode(text)
+    if check_for_badwords(ascifiedtext, KELIMELER):
+        return True
+    return check_for_badwords(text, NOASCIIFY)
 
 
 class MyStreamListener(tweepy.StreamListener):
@@ -79,6 +87,14 @@ TWITTER_TOKENS = [
 ]
 
 
+NOASCIIFY = [
+    'kürt',
+    'döl',
+    'sik',
+    'siktir',
+    'göt',
+]
+
 homofobik = [
     'lezbiyen',
     'nonos',
@@ -86,9 +102,9 @@ homofobik = [
     'ipne',
     'ibne',
     'oglanci',
-    'got oglani'
-    'gotcu'
-    'kulampara'
+    'got oglani',
+    'gotcu',
+    'kulampara',
 ]
 
 irkci = [
@@ -102,9 +118,7 @@ irkci = [
     'hain arap',
     'gurcu domuzu',
     'terorist musluman',
-    'kurt',
     'ermeni',
-    'dol',
 ]
 
 hakaret = [
@@ -118,14 +132,11 @@ hakaret = [
     'yavsak',
     'yavsak',
     'pic',
-    'got',
     'orospu',
     'gotveren',
     'got veren',
     'amcik',
-    'amın oglu',
-    'sik',
-    'siktir',
+    'amin oglu',
     'pust',
     'yarrak',
     'yarrrak',
@@ -134,8 +145,8 @@ hakaret = [
     'amk',
     'amina',
     'denyo',
-    'subyanci'
-    'kavat'
+    'subyanci',
+    'kavat',
 ]
 
 
