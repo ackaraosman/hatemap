@@ -21,6 +21,10 @@ homofobik = [
     'got oglani',
     'gotcu',
     'kulampara',
+    'gay',
+    'gey',
+    'travesti',
+
 ]
 
 
