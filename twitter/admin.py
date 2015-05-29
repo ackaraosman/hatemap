@@ -36,6 +36,7 @@ unmark_classification.short_description = 'Unmark Classification'
 class TweetAdmin(admin.OSMGeoAdmin):
     list_display = ['place_name', 'created_at', 'username', 'train', 'klass', 'body']
     list_filter = ['train', 'klass']
+    search_fields = ['body']
     actions = [
         mark_as_train,
         mark_as_not_train,
