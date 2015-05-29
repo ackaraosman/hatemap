@@ -28,6 +28,11 @@ def mark_as_homofobi(modeladmin, request, queryset):
 mark_as_homofobi.short_description = 'Mark as Homofobi'
 
 
+def mark_as_notr(modeladmin, request, queryset):
+    queryset.update(klass='N')
+mark_as_notr.short_description = 'Mark as Notr'
+
+
 def unmark_classification(modeladmin, request, queryset):
     queryset.update(klass=None)
 unmark_classification.short_description = 'Unmark Classification'
@@ -44,6 +49,7 @@ class TweetAdmin(admin.OSMGeoAdmin):
         mark_as_irkcilik,
         mark_as_homofobi,
         unmark_classification,
+        mark_as_notr,
     ]
 
 
