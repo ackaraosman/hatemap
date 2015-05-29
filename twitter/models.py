@@ -8,6 +8,7 @@ class Tweet(models.Model):
         ('A', 'Hakaret'),
         ('H', 'Homofobi'),
         ('I', 'Irkçılık'),
+        ('N', 'Nötr'),
     ]
     username = models.CharField(max_length=20)
     body = models.TextField()
