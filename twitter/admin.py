@@ -2,6 +2,12 @@
 from django.contrib.gis import admin
 from .models import Tweet
 
+
+def mark_as_not_train(modeladmin, request, queryset):
+    queryset.update(train=False)
+mark_as_not_train.short_description = 'Remove from train data'
+
+
 def mark_as_train_hakaret(modeladmin, request, queryset):
     queryset.update(klass='A', train=True)
 mark_as_train_hakaret.short_description = 'Mark as Train/Hakaret'
@@ -22,10 +28,6 @@ def mark_as_train_notr(modeladmin, request, queryset):
 mark_as_train_notr.short_description = 'Mark as Train/Notr'
 
 
-def unmark_classification(modeladmin, request, queryset):
-    queryset.update(klass=None)
-unmark_classification.short_description = 'Unmark Classification'
-
 
 class TweetAdmin(admin.OSMGeoAdmin):
     list_display = ['place_name', 'created_at', 'username', 'train', 'klass', 'body']
@@ -37,8 +39,7 @@ class TweetAdmin(admin.OSMGeoAdmin):
         mark_as_train_homofobi,
         mark_as_train_notr,
         mark_as_not_train,
-        unmark_classification,
-    ]
+       ]
 
 
 admin.site.register(Tweet, TweetAdmin)
