@@ -99,12 +99,11 @@ def extract_features(tweet):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        tweets = []
-
         trains = Tweet.objects.filter(train=True).exclude(klass__isnull=True)
         if not trains:
             raise CommandError('No train data, please add some from the admin page!')
 
+        tweets = []
         for train in trains:
             sentiment = train.klass
             feature_vect = get_feature_vector(process_tweet(train.body))

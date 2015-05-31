@@ -40,6 +40,14 @@ irkci = [
     'gurcu domuzu',
     'terorist musluman',
     'ermeni',
+    'yunan',
+    'gürcü',
+    'suriye',
+    'ırak',
+    'iran',
+    'bulgar',
+    'israil',
+    'rum',
 ]
 
 
