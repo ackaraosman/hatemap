@@ -8,6 +8,7 @@ KLASSES = {
     'irkcilik': 'I',
     'hakaret': 'A',
     'homofobi': 'H',
+    'notr': 'N',
 }
 
 
