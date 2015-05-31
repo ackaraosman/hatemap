@@ -38,8 +38,8 @@ def process_tweet(tweet):
     # convert @username to AT_USER
     tweet = re.sub(USERNAME_PATTERN,'AT_USER',tweet)
     # remove additional white spaces
-    tweet = re.sub(WHITESPACE_PATTERN, ' ', tweet)
     tweet = re.sub(r'[\'"\?,.!:;()]', ' ', tweet)
+    tweet = re.sub(WHITESPACE_PATTERN, ' ', tweet)
     # replace #word with word
     tweet = re.sub(HASHTAG_PATTERN, r'\1', tweet)
     # remove numbers
