@@ -97,21 +97,34 @@ def extract_features(tweet):
     return features
 
 
+def get_classifier(trains):
+    global FEATURE_LIST
+    FEATURE_LIST = set()
+
+    tweets = []
+    for train in trains:
+        sentiment = train.klass
+        feature_vect = get_feature_vector(process_tweet(train.body))
+        tweets.append((feature_vect, sentiment))
+        FEATURE_LIST.update(feature_vect)
+
+    training_set = nltk.classify.util.apply_features(extract_features, tweets)
+    nb_classifier = nltk.NaiveBayesClassifier.train(training_set)
+    return nb_classifier
+
+
+def get_train_tweets():
+    return Tweet.objects.filter(train=True).exclude(klass__isnull=True)
+
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        trains = Tweet.objects.filter(train=True).exclude(klass__isnull=True)
+        trains = get_train_tweets()
         if not trains:
             raise CommandError('No train data, please add some from the admin page!')
 
-        tweets = []
-        for train in trains:
-            sentiment = train.klass
-            feature_vect = get_feature_vector(process_tweet(train.body))
-            tweets.append((feature_vect, sentiment))
-            FEATURE_LIST.update(feature_vect)
-
-        training_set = nltk.classify.util.apply_features(extract_features, tweets)
-        nb_classifier = nltk.NaiveBayesClassifier.train(training_set)
+        train_count = trains.count()
+        classifier = get_classifier(trains)
 
         while True:
             unclassified_tweets = Tweet.objects.filter(train=False, klass=None)
@@ -122,7 +135,7 @@ class Command(BaseCommand):
                 start_time = time.time()
                 for tweet in unclassified_tweets:
                     feature_vect = get_feature_vector(process_tweet(tweet.body))
-                    sentiment = nb_classifier.classify(extract_features(feature_vect))
+                    sentiment = classifier.classify(extract_features(feature_vect))
                     counts[sentiment] += 1
                     tweet.klass = sentiment
                     msg = ['%d %s' % (counts[k], v) for k, v in Tweet.CLASSES]
@@ -132,5 +145,13 @@ class Command(BaseCommand):
                         db.reset_queries()
                 elapsed = int(time.time() - start_time)
                 print('\nClassifying finished in %d seconds.' % elapsed)
-            print('Waiting...')
-            time.sleep(3)
+
+            new_trains = get_train_tweets()
+            if new_trains.count() != train_count:
+                print('Train set has been changed, retraining...')
+                trains = new_trains
+                train_count = new_trains.count()
+                classifier = get_classifier(trains)
+            else:
+                print('Waiting...')
+                time.sleep(3)
