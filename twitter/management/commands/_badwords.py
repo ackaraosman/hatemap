@@ -48,6 +48,7 @@ irkci = [
     'bulgar',
     'israil',
     'rum',
+    'k*rt',
 ]
 
 
