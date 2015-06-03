@@ -20,7 +20,7 @@ class Tweet(models.Model):
     created_at = models.DateTimeField(null=True, blank=True)
     train = models.BooleanField(default=False)
     klass = models.CharField(max_length=2, choices=CLASSES, null=True, blank=True)
-
+    klass_sci = models.CharField(max_length=2, choices=CLASSES, null=True, blank=True)
 
     def __unicode__(self):
         return self.username + ': ' + self.body
