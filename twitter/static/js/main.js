@@ -13,7 +13,7 @@ $(function() {
 
   var topics = ['hakaret', 'irkcilik', 'homofobi'];
   for (var i = 0; i < topics.length; i++) {
-    $.get(baseUrl + topics[i], setTopicData.bind(this, topics[i]));
+    $.get(generateUrl(topics[i], klassType), setTopicData.bind(this, topics[i]));
   }
 
   var heatmap = new google.maps.visualization.HeatmapLayer({
@@ -21,6 +21,12 @@ $(function() {
     radius: 20,
     maxIntensity: 10
   });
+
+
+  function generateUrl(klass, klassType) {
+    return baseUrl + '?k=' + klass + '&t=' + klassType;
+  }
+
 
   function renderMap() {
     var turkey = new google.maps.LatLng(38.611, 34.831);
@@ -41,8 +47,7 @@ $(function() {
   }
 
   function fetchData() {
-    var url = baseUrl + '?k=' + klass + '&t=' + klassType;
-    xhr = $.get(url, function(data) {
+    xhr = $.get(generateUrl(klass, klassType), function(data) {
       setTopicData(klass, data);
       heatmap.setData(mapLatLng(data.results));
     });
@@ -59,13 +64,10 @@ $(function() {
   }
 
   function getKlassType(hash) {
-    if (!hash) {
+    if (!hash || hash.indexOf('&') == -1) {
       return 'nb';
     }
-    if (hash.indexOf('&') > -1) {
-      return hash.split('&')[1];
-    }
-    return hash;
+    return hash.split('&')[1];
   }
 
   window.addEventListener("hashchange", function(e) {
