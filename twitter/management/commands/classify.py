@@ -10,6 +10,8 @@ from django import db
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from unidecode import unidecode
+from sklearn.svm import LinearSVC
+from nltk.classify.scikitlearn import SklearnClassifier
 from twitter.models import Tweet
 from ._badwords import BADWORDS, BADWORDS_NOASCIIFY
 
@@ -98,20 +100,17 @@ def extract_features(tweet):
     return features
 
 
-def get_classifier(trains):
+def generate_trainset(trains):
     global FEATURE_LIST
     FEATURE_LIST = set()
-
     tweets = []
     for train in trains:
         sentiment = train.klass
         feature_vect = get_feature_vector(process_tweet(train.body))
         tweets.append((feature_vect, sentiment))
         FEATURE_LIST.update(feature_vect)
-
     training_set = nltk.classify.util.apply_features(extract_features, tweets)
-    nb_classifier = nltk.NaiveBayesClassifier.train(training_set)
-    return nb_classifier
+    return training_set
 
 
 def get_train_tweets():
@@ -125,7 +124,10 @@ class Command(BaseCommand):
             raise CommandError('No train data, please add some from the admin page!')
 
         train_count = trains.count()
-        classifier = get_classifier(trains)
+        train_set = generate_trainset(trains)
+        nb_classifier = nltk.NaiveBayesClassifier.train(train_set)
+        sci_classifier = SklearnClassifier(LinearSVC())
+        sci_classifier.train(train_set)
 
         while True:
             unclassified_tweets = Tweet.objects.filter(train=False, klass=None)
@@ -136,9 +138,11 @@ class Command(BaseCommand):
                 start_time = time.time()
                 for tweet in unclassified_tweets:
                     feature_vect = get_feature_vector(process_tweet(tweet.body))
-                    sentiment = classifier.classify(extract_features(feature_vect))
+                    features = extract_features(feature_vect)
+                    sentiment = nb_classifier.classify(features)
                     counts[sentiment] += 1
                     tweet.klass = sentiment
+                    tweet.klass_sci = sci_classifier.classify(features)
                     msg = ['%d %s' % (counts[k], v) for k, v in Tweet.CLASSES]
                     print('\r' + ', '.join(msg), end='')
                     tweet.save()
@@ -152,7 +156,10 @@ class Command(BaseCommand):
                 print('Train set has been changed, retraining...')
                 trains = new_trains
                 train_count = new_trains.count()
-                classifier = get_classifier(trains)
+                train_set = generate_trainset(trains)
+                nb_classifier = nltk.NaiveBayesClassifier.train(train_set)
+                sci_classifier = SklearnClassifier(LinearSVC())
+                sci_classifier.train(train_set)
             else:
                 print('Waiting...')
                 time.sleep(3)
