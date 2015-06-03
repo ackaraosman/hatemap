@@ -1,8 +1,9 @@
 $(function() {
-  var baseUrl = '/points.json?k=';
+  var baseUrl = '/points.json';
   var googleMap;
   var xhr;
-  var klass = window.location.hash.substring(1) || 'hakaret';
+  var klass = getKlass(window.location.hash.substring(1));
+  var klassType = getKlassType(window.location.hash.substring(1));
   setActive(klass);
 
   var initialPointsData = {};
@@ -40,15 +41,36 @@ $(function() {
   }
 
   function fetchData() {
-    var url = baseUrl + klass;
+    var url = baseUrl + '?k=' + klass + '&t=' + klassType;
     xhr = $.get(url, function(data) {
       setTopicData(klass, data);
       heatmap.setData(mapLatLng(data.results));
     });
   }
 
+  function getKlass(hash) {
+    if (!hash) {
+      return 'hakaret';
+    }
+    if (hash.indexOf('&') > -1) {
+      return hash.split('&')[0];
+    }
+    return hash;
+  }
+
+  function getKlassType(hash) {
+    if (!hash) {
+      return 'nb';
+    }
+    if (hash.indexOf('&') > -1) {
+      return hash.split('&')[1];
+    }
+    return hash;
+  }
+
   window.addEventListener("hashchange", function(e) {
-    klass = window.location.hash.substring(1);
+    klass = getKlass(window.location.hash.substring(1));
+    klassType = getKlassType(window.location.hash.substring(1));
     xhr.abort();
     setActive(klass);
     heatmap.setData(mapLatLng(initialPointsData[klass]));
