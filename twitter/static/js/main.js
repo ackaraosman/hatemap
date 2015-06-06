@@ -132,6 +132,7 @@ $(function() {
       $('a[href="#' + p + '=' + pageParams[p] + '"]').addClass('active');
     }
   }
+  $('#keyword-input').val(pageParams.q);
 
 
   // capture hash links
