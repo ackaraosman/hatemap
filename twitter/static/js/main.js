@@ -137,7 +137,7 @@ $(function() {
   // capture hash links
   $('a[href^=#]').click(function(e) {
     e.preventDefault();
-    xhr.abort();
+    if (xhr) xhr.abort();
     var href = $(this).attr('href').substring(1);
     $.extend(pageParams, parseQuerystr(href));
     fetchData();
@@ -154,7 +154,7 @@ $(function() {
     e.preventDefault();
     var q = $('#keyword-input').val();
     if (q) {
-      xhr.abort();
+      if (xhr) xhr.abort();
       pageParams.q = q;
       window.location.hash = createQuerystr(pageParams);
       fetchData();
