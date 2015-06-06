@@ -127,12 +127,16 @@ $(function() {
 
 
   // set active links initially
-  for (var p in pageParams) {
-    if (pageParams.hasOwnProperty(p)) {
-      $('a[href="#' + p + '=' + pageParams[p] + '"]').addClass('active');
+  function setActiveElements() {
+    $('a[href^=#]').removeClass('active');
+    for (var p in pageParams) {
+      if (pageParams.hasOwnProperty(p)) {
+        $('a[href="#' + p + '=' + pageParams[p] + '"]').addClass('active');
+      }
     }
+    $('#keyword-input').val(pageParams.q);
   }
-  $('#keyword-input').val(pageParams.q);
+  setActiveElements();
 
 
   // capture hash links
@@ -173,6 +177,13 @@ $(function() {
     fetchData();
     $('#keyword-input').val('').blur();
   });
+
+  window.addEventListener("hashchange", function(e) {
+    if (xhr) xhr.abort();
+    $.extend(pageParams, parseQuerystr(window.location.hash.substring(1)));
+    setActiveElements();
+    fetchData();
+  }, false);
 
   new Spinner(spinnerOpts).spin($('#spinner')[0]);
 });
