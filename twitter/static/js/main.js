@@ -1,3 +1,5 @@
+var baseUrl = '/points.json?';
+
 var spinnerOpts = {
     lines: 11            // The number of lines to draw
   , length: 5            // The length of each line
@@ -57,10 +59,30 @@ function mapLatLng(items) {
 }
 
 
+function paramsKey(params) {
+  return params.k + '|' + params.t + '|' + (params.q || '');
+}
+
+
+function fetchPoints(params, cb) {
+  var key = paramsKey(params);
+  var data = localStorage.getItem(key);
+  if (data) {
+    cb(JSON.parse(data));
+  } else {
+    $('#loading-layer').show();
+    $.get(baseUrl + createQuerystr(params), function(data) {
+      localStorage.setItem(key, JSON.stringify(data.results));
+      $('#loading-layer').hide();
+      cb(data.results);
+    });
+  }
+}
+
+
 $(function() {
   'use strict';
 
-  var baseUrl = '/points.json?';
   var googleMap;
   var xhr;
   var pageParams = {k: 'hakaret', t: 'svm'};
@@ -72,16 +94,23 @@ $(function() {
     maxIntensity: 10
   });
 
-  function fetchData() {
+  function pollData() {
     xhr = $.get(baseUrl + createQuerystr(pageParams), function(data) {
+      var key = paramsKey(pageParams);
+      localStorage.setItem(key, JSON.stringify(data.results));
       heatmap.setData(mapLatLng(data.results));
-      $('#loading-layer').hide();
+    });
+  }
+
+  function fetchData() {
+    fetchPoints(pageParams, function(data) {
+      heatmap.setData(mapLatLng(data));
     });
   }
 
   fetchData();
   renderMap();
-  setInterval(fetchData, 3000);
+  setInterval(pollData, 3000);
 
 
   function renderMap() {
@@ -105,32 +134,13 @@ $(function() {
   }
 
 
-  // fetch all data once for fast initial display
-  var initialData = {svm: {}, nb: {}};
-  var classes = ['hakaret', 'irkcilik', 'homofobi'];
-  var classifiers = ['svm', 'nb'];
-  classifiers.map(function(klassifier) {
-    classes.map(function(klass) {
-      $.get(baseUrl + createQuerystr({k: klass, t: klassifier}), function(data) {
-        initialData[klassifier][klass] = mapLatLng(data.results);
-      });
-    });
-  });
-  window.initialData = initialData;
-
-
   // capture hash links
   $('a[href^=#]').click(function(e) {
     e.preventDefault();
     xhr.abort();
     var href = $(this).attr('href').substring(1);
     $.extend(pageParams, parseQuerystr(href));
-    if (pageParams.q) {
-      $('#loading-layer').show();
-      fetchData();
-    } else {
-      heatmap.setData(initialData[pageParams.t][pageParams.k]);
-    }
+    fetchData();
     window.location.hash = createQuerystr(pageParams);
 
     // set active class
@@ -147,7 +157,6 @@ $(function() {
       xhr.abort();
       pageParams.q = q;
       window.location.hash = createQuerystr(pageParams);
-      $('#loading-layer').show();
       fetchData();
     }
   });
