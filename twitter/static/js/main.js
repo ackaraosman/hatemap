@@ -43,7 +43,7 @@ function createQuerystr(obj) {
   var params = [];
 
   for (var k in obj) {
-    if (obj.hasOwnProperty(k)) {
+    if (obj.hasOwnProperty(k) && obj[k]) {
       params.push(k + '=' + obj[k]);
     }
   }
@@ -162,6 +162,16 @@ $(function() {
     }
   });
 
+  $('#map-canvas').click(function() {
+    $('#keyword-input').blur();
+  });
+
+  $('#keyword-clear').click(function() {
+    pageParams.q = '';
+    window.location.hash = createQuerystr(pageParams);
+    fetchData();
+    $('#keyword-input').val('').blur();
+  });
 
   new Spinner(spinnerOpts).spin($('#spinner')[0]);
 });

@@ -132,6 +132,18 @@ a {
     color: #ccc;
 }
 
+#keyword-clear {
+    position: absolute;
+    left: 200px;
+    top: 8px;
+    color: #ccc;
+    cursor: pointer;
+}
+
+#keyword-clear:hover {
+    color: yellow;
+}
+
 #loading-layer {
     position: absolute;
     top: 0;
