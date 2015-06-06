@@ -50,7 +50,7 @@ class MyStreamListener(tweepy.StreamListener):
             if contains_bad_word(status.text):
                 coordinates = status.place.bounding_box.origin()
                 # HACK: if its origin is Turkey, then dont save it
-                if coordinates != (25.668509, 35.8084193):
+                if coordinates != (25.668509, 35.8084193) and status.place.name != 'Iraq':
                     # FIXME: origin is the wrong coordinate
                     point = fromstr('POINT(%s %s)' % coordinates)
                     save_tweet = True
