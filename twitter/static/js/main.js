@@ -167,6 +167,7 @@ $(function() {
   });
 
   $('#keyword-clear').click(function() {
+    if (xhr) xhr.abort();
     pageParams.q = '';
     window.location.hash = createQuerystr(pageParams);
     fetchData();
