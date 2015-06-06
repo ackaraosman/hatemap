@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views.decorators.gzip import gzip_page
+from django.db.models import Q
 from jsonview.decorators import json_view
+from unidecode import unidecode
 from .models import Tweet
 
 
@@ -21,13 +23,18 @@ def home(request):
 def points(request):
     klass_type = request.GET.get('t', 'nb')
     klass = request.GET.get('k', '')
+    q = request.GET.get('q')
+
+    tweets = Tweet.objects.all()
     if klass:
         if klass_type == 'nb':
-            tweets = Tweet.objects.filter(klass=KLASSES[klass]).order_by('-id')
+            tweets = tweets.filter(klass=KLASSES[klass]).order_by('-id')
         else:
-            tweets = Tweet.objects.filter(klass_sci=KLASSES[klass]).order_by('-id')
-    else:
-        tweets = Tweet.objects.all().order_by('-id')
+            tweets = tweets.filter(klass_sci=KLASSES[klass]).order_by('-id')
+    if q:
+        tweets = tweets.filter(Q(body__icontains=q) | Q(body__icontains=unidecode(q)))
+    tweets = tweets.order_by('-id')
+
     points = [[p[0].x, p[0].y] for p in tweets[:5000].values_list('point')]
     return {
         'results': points
