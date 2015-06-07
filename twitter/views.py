@@ -30,7 +30,7 @@ def points(request):
         if klass_type == 'nb':
             tweets = tweets.filter(klass=KLASSES[klass]).order_by('-id')
         else:
-            tweets = tweets.filter(klass_sci=KLASSES[klass]).order_by('-id')
+            tweets = tweets.filter(klass_svm=KLASSES[klass]).order_by('-id')
     if q:
         tweets = tweets.filter(Q(body__icontains=q) | Q(body__icontains=unidecode(q)))
     tweets = tweets.order_by('-id')

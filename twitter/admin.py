@@ -30,8 +30,8 @@ mark_as_train_notr.short_description = 'Mark as Train/Notr'
 
 
 class TweetAdmin(admin.OSMGeoAdmin):
-    list_display = ['place_name', 'created_at', 'username', 'train', 'klass', 'klass_sci', 'body']
-    list_filter = ['train', 'klass', 'klass_sci']
+    list_display = ['place_name', 'created_at', 'username', 'train', 'klass', 'klass_svm', 'body']
+    list_filter = ['train', 'klass', 'klass_svm']
     search_fields = ['body']
     actions = [
         mark_as_train_hakaret,

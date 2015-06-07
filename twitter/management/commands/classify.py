@@ -145,7 +145,7 @@ class Command(BaseCommand):
                     counts_nb[sentiment_nb] += 1
                     counts_svm[sentiment_svm] += 1
                     tweet.klass = sentiment_nb
-                    tweet.klass_sci = sentiment_svm
+                    tweet.klass_svm = sentiment_svm
                     msg_nb = ['%d %s' % (counts_nb[k], v) for k, v in Tweet.CLASSES]
                     msg_svm = ['%d %s' % (counts_svm[k], v) for k, v in Tweet.CLASSES]
                     print('\rNB: ' + ', '.join(msg_nb) + ';\tSVM: ' + ', '.join(msg_svm), end='')
