@@ -21,16 +21,18 @@ def home(request):
 @gzip_page
 @json_view
 def points(request):
-    klass_type = request.GET.get('t', 'nb')
+    klass_type = request.GET.get('t', '')
     klass = request.GET.get('k', '')
     q = request.GET.get('q')
 
     tweets = Tweet.objects.all()
     if klass:
-        if klass_type == 'nb':
-            tweets = tweets.filter(klass=KLASSES[klass]).order_by('-id')
+        if klass_type == 'svm':
+            tweets = tweets.filter(klass_svm=KLASSES[klass])
+        elif klass_type == 'nb':
+            tweets = tweets.filter(klass=KLASSES[klass])
         else:
-            tweets = tweets.filter(klass_svm=KLASSES[klass]).order_by('-id')
+            tweets = tweets.filter(klass=KLASSES[klass], klass_svm=KLASSES[klass])
     if q:
         tweets = tweets.filter(Q(body__icontains=q) | Q(body__icontains=unidecode(q)))
     tweets = tweets.order_by('-id')

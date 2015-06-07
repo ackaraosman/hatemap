@@ -39,7 +39,7 @@ class TweetAdmin(admin.OSMGeoAdmin):
         mark_as_train_homofobi,
         mark_as_train_notr,
         mark_as_not_train,
-       ]
+    ]
 
 
 admin.site.register(Tweet, TweetAdmin)

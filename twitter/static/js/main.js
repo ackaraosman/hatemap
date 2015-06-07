@@ -85,7 +85,7 @@ $(function() {
 
   var googleMap;
   var xhr;
-  var pageParams = {k: 'hakaret', t: 'svm'};
+  var pageParams = {k: 'hakaret', t: 'all'};
   $.extend(pageParams, parseQuerystr(window.location.hash.substring(1)));
 
   var heatmap = new google.maps.visualization.HeatmapLayer({
