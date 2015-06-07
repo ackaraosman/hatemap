@@ -134,17 +134,22 @@ class Command(BaseCommand):
             total_count = unclassified_tweets.count()
             if total_count > 0:
                 print('Classifying %d tweets...' % total_count)
-                counts = defaultdict(int)
+                counts_nb = defaultdict(int)
+                counts_svm = defaultdict(int)
                 start_time = time.time()
                 for tweet in unclassified_tweets:
                     feature_vect = get_feature_vector(process_tweet(tweet.body))
                     features = extract_features(feature_vect)
-                    sentiment = nb_classifier.classify(features)
-                    counts[sentiment] += 1
-                    tweet.klass = sentiment
-                    tweet.klass_sci = sci_classifier.classify(features)
-                    msg = ['%d %s' % (counts[k], v) for k, v in Tweet.CLASSES]
-                    print('\r' + ', '.join(msg), end='')
+                    sentiment_nb = nb_classifier.classify(features)
+                    sentiment_svm = sci_classifier.classify(features)
+                    counts_nb[sentiment_nb] += 1
+                    counts_svm[sentiment_svm] += 1
+                    tweet.klass = sentiment_nb
+                    tweet.klass_sci = sentiment_svm
+                    msg_nb = ['%d %s' % (counts_nb[k], v) for k, v in Tweet.CLASSES]
+                    msg_svm = ['%d %s' % (counts_svm[k], v) for k, v in Tweet.CLASSES]
+                    print('\rNB: ' + ', '.join(msg_nb) + ';\tSVM: ' + ', '.join(msg_svm), end='')
+                    # print('\r' + ', '.join(msg_nb), end='')
                     tweet.save()
                     if settings.DEBUG:
                         db.reset_queries()
